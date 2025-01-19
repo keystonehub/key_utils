@@ -15,7 +15,7 @@ fx_version 'cerulean'
 games { 'gta5', 'rdr3' }
 
 name 'fivem_utils'
-version '0.0.0'
+version '1.0.0'
 description 'Keystone - Developer Utility Library'
 author 'keystone'
 repository 'https://github.com/keystonehub/fivem_utils'
