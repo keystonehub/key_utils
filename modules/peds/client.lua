@@ -1,5 +1,7 @@
 local peds = {}
 
+local requests = utils.get_module('requests')
+
 --- @section Tables
 
 --- Stores created peds and their associated data.
@@ -63,13 +65,14 @@ end
 ]]
 local function create_ped(data)
     local base_data = data.base_data or {}
-    utils.requests.model(GetHashKey(base_data.model))
-    local ped = CreatePed(4, GetHashKey(base_data.model), base_data.coords.x, base_data.coords.y, base_data.coords.z - 1, base_data.coords.w, base_data.networked or false, true)
+    local model = GetHashKey(base_data.model)
+    requests.model(model)
+    local ped = CreatePed(0, model, base_data.coords.x, base_data.coords.y, base_data.coords.z - 1, base_data.coords.w, base_data.networked or false, true)
     SetEntityInvincible(ped, true)
     SetBlockingOfNonTemporaryEvents(ped, true)
     FreezeEntityPosition(ped, true)
     if data.animation_data then
-        utils.requests.anim(animation_data.dict)
+        requests.anim(animation_data.dict)
         TaskPlayAnim(ped, data.animation_data.dict, data.animation_data.anim, data.animation_data.blend_in or 8.0, data.animation_data.blend_out or -8.0, data.animation_data.duration or -1, data.animation_data.flag or 0, data.animation_data.playback_rate or 1.0, false, false, false)
     elseif base_data.scenario then
         TaskStartScenarioInPlace(ped, base_data.scenario, 0, true)
