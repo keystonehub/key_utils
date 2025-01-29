@@ -10,15 +10,12 @@ local unique_id_digits = tonumber(GetConvar('utils:unique_id_digits', '5'))
 --- @section Constants
 
 --- Constants for identifier types.
-local IDENTIFIERS = { LICENSE = 'license', DISCORD = 'discord', IP = 'ip' }
+local IDENTIFIERS = { LICENSE = 'license2', DISCORD = 'discord', IP = 'ip' }
 
 --- @section User Tables
 
---- Temporary storage for users connecting to the server.
 local temp_connected_users = {}
-
---- Stores fully connected users.
-local connected_users = {}
+connected_users = {}
 
 --- @section Utility Functions
 
@@ -130,6 +127,10 @@ end
 local function on_player_connect(name, kick, deferrals)
     local source = source
     local ids = get_identifiers(source)
+    if not ids.license then
+        kick("No valid license found.")
+        return
+    end
     local unique_id = generate_unique_id(unique_id_prefix, unique_id_digits, 'utils_users', 'unique_id')
     deferrals.defer()
     update_deferral(deferrals, 'Checking your identifiers...', 100)
@@ -138,24 +139,26 @@ local function on_player_connect(name, kick, deferrals)
         update_deferral(deferrals, 'User data found. Checking bans...', 500)
         if is_player_banned(result[1], deferrals) then return end
         update_deferral(deferrals, 'Welcome back!', 500)
-        temp_connected_users[source] = { unique_id = result[1].unique_id, rank = result[1].rank }
-        deferrals.done()
+        temp_connected_users[ids.license] = { unique_id = result[1].unique_id, rank = result[1].rank }
     else
         update_deferral(deferrals, 'Creating new user...', 500)
         create_user(name, unique_id, ids.license, ids.discord, GetPlayerTokens(source), ids.ip)
-        temp_connected_users[source] = { unique_id = unique_id, rank = 'member' }
-        update_deferral(deferrals, 'Welcome to the community!', 500)
-        deferrals.done()
+        temp_connected_users[ids.license] = { unique_id = unique_id, rank = 'member' }
     end
+    update_deferral(deferrals, 'Welcome to the community!', 500)
+    deferrals.done()
 end
 AddEventHandler('playerConnecting', on_player_connect)
 
---- Handle when a player has fully joined the server.
+--- Moves player from temp to connected on join.
 local function on_player_joining()
     local source = source
-    if temp_connected_users[source] then
-        connected_users[source] = temp_connected_users[source]
-        temp_connected_users[source] = nil
+    local ids = get_identifiers(source)
+    if ids.license and temp_connected_users[ids.license] then
+        connected_users[source] = temp_connected_users[ids.license]
+        temp_connected_users[ids.license] = nil
+    else
+        print('No temp data found for license:', ids.license or "UNKNOWN")
     end
 end
 AddEventHandler('playerJoining', on_player_joining)
@@ -164,7 +167,6 @@ AddEventHandler('playerJoining', on_player_joining)
 local function on_player_drop()
     local source = source
     connected_users[source] = nil
-    temp_connected_users[source] = nil
 end
 AddEventHandler('playerDropped', on_player_drop)
 
