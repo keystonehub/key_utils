@@ -160,4 +160,61 @@ end
 exports('get_blips_by_category', get_blips_by_category)
 blips.get_blips_by_category = get_blips_by_category
 
+--- Create a blip with customizable alpha and duration, and optional color palette.
+--- @param options table: A table containing the following keys:
+--- @usage
+--[[
+    utils.blips.create_blip_alpha({
+        coords = vector3(100.0, 200.0, 30.0),
+        sprite = 161,
+        colour = 1, 
+        scale = 1.5, 
+        label = 'Example Blip',
+        alpha = 250,
+        duration = 10,
+        colour_palette = {1, 3}
+    })
+]]
+local function create_blip_alpha(options)
+    local blip = AddBlipForCoord(options.coords)
+    SetBlipSprite(blip, options.sprite)
+    SetBlipColour(blip, options.colour)
+    SetBlipScale(blip, options.scale)
+    SetBlipAsShortRange(blip, true)
+    BeginTextCommandSetBlipName('STRING')
+    AddTextComponentString(options.label)
+    EndTextCommandSetBlipName(blip)
+    local alpha = options.alpha
+    local duration = options.duration * 1000
+    local start_time = GetGameTimer()
+    local step_time = 100
+    local steps = duration / step_time
+    local alpha_decrement = alpha / steps
+    local colour_palette = options.colour_palette or {options.colour}
+    local current_color_index = 1
+    CreateThread(function()
+        while alpha > 0 do
+            alpha = alpha - alpha_decrement
+            if alpha <= 0 then
+                RemoveBlip(blip)
+                return
+            end
+            SetBlipAlpha(blip, math.floor(alpha))
+            Wait(step_time)
+        end
+    end)
+    CreateThread(function()
+        while alpha > 0 do
+            if #colour_palette > 1 then
+                current_color_index = current_color_index % #colour_palette + 1
+                SetBlipColour(blip, colour_palette[current_color_index])
+            end
+            Wait(750)
+        end
+    end)
+end
+
+exports('create_blip_alpha', create_blip_alpha)
+blips.create_blip_alpha = create_blip_alpha
+
 return blips
