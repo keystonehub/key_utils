@@ -24,6 +24,13 @@ RegisterNetEvent('fivem_utils:cl:notify', function(options)
     notify(options)
 end)
 
+--- @section Events
+
+--- Event to trigger notification from the server.
+RegisterNetEvent('fivem_utils:cl:send_notification', function(options)
+    notify(options)
+end)
+
 --- @section Testing
 RegisterCommand('ui:test_notify', function()
     local types = { 'success', 'error', 'info', 'warning', 'primary', 'secondary', 'light', 'dark', 'critical', 'neutral' }
