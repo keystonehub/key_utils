@@ -4,7 +4,7 @@ local notifications = {}
 
 local handlers = {
     default = function(options)
-        TriggerEvent('fivem_utils:notify', { type = options.type, header = options.header, message = options.message, duration = options.duration })
+        TriggerEvent('fivem_utils:cl:notify', { type = options.type, header = options.header, message = options.message, duration = options.duration })
     end,
     boii_ui = function(options)
         TriggerEvent('boii_ui:notify', { type = options.type, header = options.header, message = options.message, duration = options.duration })
@@ -16,7 +16,7 @@ local handlers = {
         TriggerEvent('ESX:Notify', options.type, options.duration, options.message)
     end,
     ['qb-core'] = function(options)
-        local type_mapping = { information = 'primary', info = 'primary' } --- Additional type mapping as qb does not cover "info" by default others may require also.
+        local type_mapping = { information = 'primary', info = 'primary' }
         options.type = type_mapping[options.type] or options.type
         TriggerEvent('QBCore:Notify', options.message, options.type, options.duration)
     end,
@@ -43,16 +43,18 @@ local function detect_handler()
     return 'default'
 end
 
-local NOTIFICATIONS
-NOTIFICATIONS = detect_handler()
-utils.debug_log('info', ('[Notifications] NOTIFICATIONS handler set to: %s'):format(NOTIFICATIONS))
+local NOTIFICATIONS = detect_handler()
+print(('[Notifications] Handler set to: %s'):format(NOTIFICATIONS))
 
 --- @section Local Functions
 
 --- Notification bridge function.
 --- @param options table: The notification options (type, message, header, duration).
 local function notify(options)
-    if not options or not options.type or not options.message then utils.debug_log('error', '[Notifications] Invalid notification data provided.') return end
+    if not options or not options.type or not options.message then
+        utils.debug_log('error', '[Notifications] Invalid notification data provided.')
+        return
+    end
     local handler = handlers[NOTIFICATIONS] or handlers.default
     handler(options)
 end
