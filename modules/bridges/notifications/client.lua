@@ -60,27 +60,4 @@ end
 exports('send_notification', notify)
 notifications.send = notify
 
---- @section Events
-
---- Event to trigger notification from the server.
-RegisterNetEvent('fivem_utils:cl:send_notification', function(options)
-    notify(options)
-end)
-
---- @section Testing
-
-RegisterCommand('ui:test_notify_bridge', function()
-    local notifications = {
-        { type = 'success', header = 'Success', message = 'This is a success notification.' },
-        { type = 'error', header = 'Error', message = 'This is an error notification.' },
-        { type = 'info', header = 'Info', message = 'This is an info notification.' },
-        { type = 'warning', header = 'Warning', message = 'This is a warning notification.' }
-    }
-    for i, notif in ipairs(notifications) do
-        SetTimeout(i * 2000, function()
-            notify(notif)
-        end)
-    end
-end, false)
-
 return notifications
