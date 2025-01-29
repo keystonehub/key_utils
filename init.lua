@@ -18,7 +18,7 @@ local IS_SERVER <const> = IsDuplicityVersion()
 --- Frameworks available for detection and loading framework bridges.
 --- @type table<number, string>: An array of framework resource names.
 local FRAMEWORKS <const> = { 
-    'boii_core', 
+    'keystone', 
     'es_extended', 
     'ox_core', 
     'qb-core' 
@@ -96,7 +96,10 @@ end)
 --- @param module_name string: The name of the module to load.
 --- @return table|nil: The loaded module or nil if loading failed.
 local function load_module(module_name)
-    if utils.loaded[module_name] then return utils.loaded[module_name] end
+    if utils.loaded[module_name] and next(utils.loaded[module_name]) then
+        debug_log('info', ('[Load Module] Module already cached and valid: %s'):format(module_name))
+        return utils.loaded[module_name]
+    end
     local paths = {
         ('modules/bridges/frameworks/%s'):format(module_name),
         ('modules/bridges/%s'):format(module_name),
@@ -126,17 +129,34 @@ local function load_module(module_name)
     return result
 end
 
---- Load all modules.
+--- Load all modules with priority for specific modules (callbacks and commands first).
 --- This function handles loading and setting the correct framework bridge to utils.fw.
 local function load_framework_bridge()
     local active_framework
+    local MODULE_PRIORITY = {
+        'callbacks',
+        'commands'
+    }
+
+    -- Load priority modules first
+    for i = 1, #MODULE_PRIORITY do
+        local module_name = MODULE_PRIORITY[i]
+        local result = load_module(module_name)
+        if result then
+            debug_log('success', ('[Module Load] Priority module loaded: %s'):format(module_name))
+        else
+            debug_log('error', ('[Module Load] Failed to load priority module: %s'):format(module_name))
+        end
+    end
+
+    -- Load remaining framework bridges
     for i = 1, #FRAMEWORKS do
         local framework = FRAMEWORKS[i]
         if GetResourceState(framework) == 'started' then
             debug_log('info', ('[Framework Bridge] Supported framework detected: %s'):format(framework))
             local framework_result = load_module(framework, true)
             if framework_result then
-                utils.fw = framework_result
+                utils.loaded.fw = framework_result
                 debug_log('success', ('[Framework Bridge] Loaded bridge functions for: %s'):format(framework))
                 break
             else
@@ -144,8 +164,12 @@ local function load_framework_bridge()
             end
         end
     end
-    if not utils.fw then debug_log('info', '[Framework Bridge] No compatible framework found. Running in standalone mode.') end
+
+    if not utils.loaded.fw then
+        debug_log('info', '[Framework Bridge] No compatible framework found. Running in standalone mode.')
+    end
 end
+
 
 --- Load a specific data module.
 --- @param name string: The name of the data file (without extension).
@@ -185,7 +209,7 @@ end)
 --- Retrieve all loaded modules.
 --- @return table: The utils table containing loaded modules.
 local function get_modules()
-    return utils
+    return utils.loaded
 end
 
 exports('get_modules', get_modules)
