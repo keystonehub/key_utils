@@ -118,7 +118,6 @@ keys.get_key_name = get_key_name
 
 --- Prints the list of all keys and their codes.
 local function print_key_list()
-    print('Keylist:')
     for name, code in pairs(key_list) do
         print(name, code)
     end
