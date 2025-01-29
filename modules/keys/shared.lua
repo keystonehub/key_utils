@@ -84,6 +84,16 @@ local key_list = {
 --- Retrieves the key code for a given key name.
 --- @param key_name string: The name of the key.
 --- @return number: The key code for the given key name, or nil if not found.
+local function get_keys(key_name)
+    return key_list
+end
+
+exports('get_keys', get_keys)
+keys.get_keys = get_keys
+
+--- Retrieves the key code for a given key name.
+--- @param key_name string: The name of the key.
+--- @return number: The key code for the given key name, or nil if not found.
 local function get_key(key_name)
     return key_list[key_name]
 end
