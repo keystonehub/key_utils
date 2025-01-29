@@ -32,7 +32,7 @@ AddEventHandler('fivem_utils:cl:client_callback', function(client_cb_id, server_
         callback(...)
         stored_callbacks[client_cb_id] = nil
     else
-        utils.debub_log('error', 'Client callback not found: ', client_cb_id)
+        utils.debug_log('error', 'Client callback not found: ', client_cb_id)
     end
 end)
 
