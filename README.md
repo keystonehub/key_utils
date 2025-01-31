@@ -59,36 +59,36 @@ The Rest:
 
 ## 🎨 UI Elements
 
-![image](https://media.discordapp.net/attachments/1330607993863143508/1330630894834421821/image.png?ex=678eae17&is=678d5c97&hm=56825f290d1696ad3590ec1dc0d3873f46ab3d6921f9739bc632f977a76230ac&=&format=webp&quality=lossless&width=1202&height=676)
-![image](https://media.discordapp.net/attachments/1330607993863143508/1330631449614745743/image.png?ex=678eae9b&is=678d5d1b&hm=118d8b14f93b63233aeabe81c4aceea4df1f50d6e704918c5e0e39bd078038cf&=&format=webp&quality=lossless&width=1202&height=676)
+![image](https://i.imgur.com/1e0kaDk.png)
+![image](https://i.imgur.com/VUzYEWr.png)
 
 - **Action Menu:** Provides alternate functionality to a radial menu, works similarly, main menus with sub menus.
 
-![image](https://media.discordapp.net/attachments/1330607993863143508/1330608050192646264/spaces2FHfd391cB6wDC8S3yHcie2Fuploads2FyooG6MHUHRrLUzeBZDaI2Fimage.png?ex=678e98d0&is=678d4750&hm=3cc51347d7a9dd7dcaff3ecd2c51c13ec2a3ad09ce475b3c806987cdbd48657e&=&format=webp&quality=lossless)
+![image](https://i.imgur.com/9kETuxU.png)
 
 - **Context Menu:** This was a quick addition before release it will be improved.
 
-![image](https://media.discordapp.net/attachments/1330607993863143508/1330608803670003893/image.png?ex=678e9984&is=678d4804&hm=cf3298a17229394c0f1c9bd6a5986f38345a9b9f6745769e0ec76386e42a5be1&=&format=webp&quality=lossless)
+![image](https://i.imgur.com/QAWU3eM.png)
 
 - **Dialogue:** Redesign and refactor to my old boii_ui dialogue system.
 
-![image](https://media.discordapp.net/attachments/1330607993863143508/1330608151996661860/spaces2FHfd391cB6wDC8S3yHcie2Fuploads2FB8pGKOcyAl9Pvrf4CBmu2Fimage.png?ex=678e98e8&is=678d4768&hm=3c4c1b97b36c660633ef47160f6a88aee7e152ff08b4d454d05d4b77ee4b2b14&=&format=webp&quality=lossless)
+![image](https://i.imgur.com/0ft6MER.png)
 
 - **Drawtext UI:** Supports regular key display and presses or can be used with an icon and progress bar for timed indicators.
 
-![image](https://media.discordapp.net/attachments/1330607993863143508/1330608119566438410/spaces2FHfd391cB6wDC8S3yHcie2Fuploads2FlWEcFv3AwvdK09GDZHPv2Fimage.png?ex=678e98e1&is=678d4761&hm=df6935d07a03ab1618def7e8235606885538e557bb068490866478479c1f0050&=&format=webp&quality=lossless)
+![image](https://i.imgur.com/iseGgKq.png)
 
 - **Notifications:** Available types: success, error, info, warning, primary, secondary, light, dark, critical, neutral.
 
-![image](https://media.discordapp.net/attachments/1330607993863143508/1330608014868222002/spaces2FHfd391cB6wDC8S3yHcie2Fuploads2FwZ6HF7GJIyhDgGW3SJWB2Fimage.png?ex=678e98c8&is=678d4748&hm=d0e9a4c94d9da8e82b109578836ae1a319f847dcd0cee72e68e33add52294c7e&=&format=webp&quality=lossless)
+![image](https://i.imgur.com/2Eo6cVk.png)
 
 - **Progress Bar:** Simple no fuss progress bar.
 
-![image](https://media.discordapp.net/attachments/1330607993863143508/1330608095931535421/spaces2FHfd391cB6wDC8S3yHcie2Fuploads2F4OsVmxvaR2v9ujnsCiqb2Fimage.png?ex=678e98db&is=678d475b&hm=cf0cc95cfb5a571863d972ee3add4c2d16c8ef99725b9edafe96304d18017835&=&format=webp&quality=lossless)
+![image](https://i.imgur.com/6PbQsqm.png)
 
 - **Progress Circle:** This has been used built into some recent boii releases however now its here and freely available to use.
 
-![image](https://media.discordapp.net/attachments/1330607993863143508/1330608075115335700/spaces2FHfd391cB6wDC8S3yHcie2Fuploads2FSiAAxLROrR9KFkmRJV6W2Fimage.png?ex=678e98d6&is=678d4756&hm=838a6faf894f1795b9b2e901ea98dfd29912f3c1dc212310dea4b8794cee220c&=&format=webp&quality=lossless)
+![image](https://i.imgur.com/f1GLUyJ.png)
 
 ## 💹 Dependencies
 
