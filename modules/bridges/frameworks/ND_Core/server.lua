@@ -1,4 +1,4 @@
-if config.framework ~= 'ND_Core' or GetResourceState('es_extended') ~= 'started' then return end
+if config.framework ~= 'ND_Core' or GetResourceState('ND_Core') ~= 'started' then return end
 
 local callbacks = utils.get_module('callbacks')
 local tables_module = utils.get_module('tables')
