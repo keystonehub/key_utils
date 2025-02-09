@@ -3,7 +3,7 @@
 
 --- @section Debugging
 
-local debug_enabled = GetConvar('utils:debug', 'false') == 'true' -- Default is false in convars
+local debug_enabled = config.debug
 
 --- @section Constants
 
@@ -21,7 +21,8 @@ local FRAMEWORKS <const> = {
     'keystone', 
     'es_extended', 
     'ox_core', 
-    'qb-core' 
+    'qb-core',
+    'ND_Core'
 }
 
 --- Modules to be loaded with priority before others.
