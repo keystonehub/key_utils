@@ -7,7 +7,7 @@
 |_|\_\_____| |_| |____/ |_| \___/|_| \_|_____|
 ----------------------------------------------                                               
            Developer Utility Library
-                   V1.0.0              
+                   V1.0.4              
 ----------------------------------------------
 ]]
 
@@ -28,6 +28,7 @@ files {
     'ui/**'
 }
 
+shared_script 'config.lua'
 shared_script 'init.lua'
 server_script 'user_registry.lua' -- Required! user accounts handle permissions for commands etc.. dont remove.
 
