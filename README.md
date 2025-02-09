@@ -108,12 +108,7 @@ Prior to installation make sure you have all of the dependencies listed above in
 - `REQUIRED.sql` is as the name suggests **required** this is the user accounts tables used by utils.
 - `sqls/frameworks` contains framework specific tables to support the utils licence, rep, and skills systems, these are optional if you do not use the systems.
 
-4. Customise utils settings inside `utils_settings.cfg`.
-- These are convars, you should copy these into your `server.cfg` 
-- Or move the file into your servers root *(where your server.cfg is)* and add the following line into your `server.cfg` 
-```
-exec utils_settings.cfg
-```
+4. Customise utils settings inside `config.lua`.
 
 5. Add `fivem_utils` resource into your server resources.
 
