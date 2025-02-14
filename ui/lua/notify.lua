@@ -26,10 +26,27 @@ end)
 
 --- @section Events
 
---- Event to trigger notification from the server.
+--- Bridge event was moved here to prevent doubling when getting notify bridge module.
 RegisterNetEvent('fivem_utils:cl:send_notification', function(options)
-    notify(options)
+    exports.fivem_utils:send_notification(options)
 end)
+
+--- @section Testing
+
+RegisterCommand('ui:test_notify_bridge', function()
+    local test_notifications = {
+        { type = 'success', header = 'Success', message = 'This is a success notification.' },
+        { type = 'error', header = 'Error', message = 'This is an error notification.' },
+        { type = 'info', header = 'Info', message = 'This is an info notification.' },
+        { type = 'warning', header = 'Warning', message = 'This is a warning notification.' },
+    }
+    for i, notif in ipairs(test_notifications) do
+        SetTimeout(i * 2000, function()
+            exports.fivem_utils:send_notification(notif)
+        end)
+    end
+end, false)
+
 
 --- @section Testing
 RegisterCommand('ui:test_notify', function()
