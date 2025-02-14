@@ -4,21 +4,21 @@
 
 The Framework Bridge Module allows scripts to work across multiple FiveM frameworks by handling framework-specific differences internally.
 
-It was originally developed in-house for BOII Development multi-framework releases and has been tested in live servers. 
+It was originally developed in-house for BOII Development multi-framework releases and has been tested in live servers.
 The module continues to be actively used and updated as needed.
 
-For adding additional bridges, refer to the documentation. 
+For adding additional bridges, refer to the documentation.
 If you need further assistance, contact support via Discord.
 
 ## What is a Bridge?
 
-A bridge is a layer between your scripts and the framework. 
-It provides a straight forward api (`utils.fw` or exports if preferred) to access framework-specific functionality without requiring changes to your scripts.
+A bridge is a layer between your scripts and the framework.
+It provides a straightforward API (`core`) to access framework-specific functionality without requiring changes to your scripts.
 
 ## What Does the Framework Bridge Do?
 
 - Detects the active framework by checking folder names in `modules/bridges/frameworks/`.
-- Provides framework-specific functions through `utils.fw` or exports.
+- Provides framework-specific functions through `core`.
 - Handles tasks like retrieving player data, managing jobs, adding items, or adjusting balances.
 
 ## How is This Useful?
@@ -29,61 +29,76 @@ It provides a straight forward api (`utils.fw` or exports if preferred) to acces
 
 ## Usage
 
+### Getting the Framework Module
+
+To access the framework bridge, use:
+
+```lua
+local core = exports.fivem_utils:get_module('fw')
+```
+
+This ensures you are only loading the framework bridge instead of all modules.
+
 #### Client Side
 
 1. **Retrieve Player Identity**:
-   ```lua
-   local identity = utils.fw.get_identity()
-   if identity then
-       print('Player Name:', identity.first_name, identity.last_name)
-       print('Date of Birth:', identity.dob)
-   else
-       print('Failed to retrieve player identity.')
-   end
-   ```
+
+```lua
+local identity = core.get_identity()
+if identity then
+    print('Player Name:', identity.first_name, identity.last_name)
+    print('Date of Birth:', identity.dob)
+else
+    print('Failed to retrieve player identity.')
+end
+```
 
 2. **Retrieve Player Unique ID**:
-   ```lua
-   local player_id = utils.fw.get_player_id()
-   if player_id then
-       print('Player Unique ID:', player_id)
-   else
-       print('Failed to retrieve player unique ID.')
-   end
-   ```
+
+```lua
+local player_id = core.get_player_id()
+if player_id then
+    print('Player Unique ID:', player_id)
+else
+    print('Failed to retrieve player unique ID.')
+end
+```
 
 #### Server Side
 
 1. **Check if a Player Has an Item**:
-   ```lua
-   local hasItem = utils.fw.has_item(source, 'water', 1)
-   if hasItem then
-       print('Player has water.')
-   else
-       print('Player does not have water.')
-   end
-   ```
+
+```lua
+local has_item = core.has_item(source, 'water', 1)
+if has_item then
+    print('Player has water.')
+else
+    print('Player does not have water.')
+end
+```
 
 2. **Adjust Player Balance**:
-   ```lua
-   utils.fw.adjust_balance(source, {
-       operations = {
-           { action = 'add', balance_type = 'cash', amount = 500 },
-           { action = 'remove', balance_type = 'bank', amount = 200 }
-       }
-   })
-   print('Player balance adjusted.')
-   ```
+
+```lua
+core.adjust_balance(source, {
+    operations = {
+        { action = 'add', balance_type = 'cash', amount = 500 },
+        { action = 'remove', balance_type = 'bank', amount = 200 }
+    }
+})
+print('Player balance adjusted.')
+```
 
 3. **Get Player Job Details**:
-   ```lua
-   local jobs = utils.fw.get_player_jobs(source)
-   if jobs then
-       print('Player Jobs:', table.concat(jobs, ', '))
-   else
-       print('No jobs found for player.')
-   end
-   ```
+
+```lua
+local jobs = core.get_player_jobs(source)
+if jobs then
+    print('Player Jobs:', table.concat(jobs, ', '))
+else
+    print('No jobs found for player.')
+end
+```
 
 ## Workflow Example
 
@@ -92,7 +107,7 @@ It provides a straight forward api (`utils.fw` or exports if preferred) to acces
 ### Client
 
 ```lua
-utils.callbacks.trigger('server_check_balance_and_give_item', { item = 'water' }, function(success)
+callbacks.trigger('server_check_balance_and_give_item', { item = 'water' }, function(success)
     if success then
         print('Transaction completed. Item added.')
     else
@@ -104,7 +119,7 @@ end)
 ### Server
 
 ```lua
-utils.callbacks.register('server_check_balance_and_give_item', function(source, data, cb)
+callbacks.register('server_check_balance_and_give_item', function(source, data, cb)
     local item_prices = {
         water = 100,
         bread = 50
@@ -119,21 +134,21 @@ utils.callbacks.register('server_check_balance_and_give_item', function(source, 
         return
     end
 
-    local balance = utils.fw.get_balance_by_type(source, 'cash')
+    local balance = core.get_balance_by_type(source, 'cash')
     if balance >= cost then
-        utils.fw.adjust_balance(source, {
+        core.adjust_balance(source, {
             operations = {
                 { action = 'remove', balance_type = 'cash', amount = cost }
             }
         })
-        utils.fw.adjust_inventory(source, {
+        core.adjust_inventory(source, {
             items = {
                 { action = 'add', item_id = item, amount = 1 }
             }
         })
-        cb(true) -- Success
+        cb(true)
     else
-        cb(false) -- Failure
+        cb(false)
     end
 end)
 ```
@@ -154,7 +169,7 @@ modules/
 
 If your server uses a renamed core resource folder, this information is **crucial**.
 
-To ensure proper functionality, the folder name of your core resource **must** match one of the frameworks listed inside the **FRAMEWORKS** array in the `init.lua` file. 
+To ensure proper functionality, the folder name of your core resource **must** match one of the frameworks listed inside the **FRAMEWORKS** array in the `init.lua` file.
 If your core has been renamed, update the corresponding framework folder name to match the renamed core resource folder.
 
 For example:
