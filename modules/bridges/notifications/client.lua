@@ -30,30 +30,30 @@ local handlers = {
 
 --- Detect available notification handler.
 local function detect_handler()
-    local resource_priority = config.notifications_priority
-    local convar_handler = config.notifications
-    if handlers[convar_handler] then return convar_handler end
-    for _, resource in ipairs(resource_priority) do
-        if GetResourceState(resource) == 'started' then
-            utils.debug_log('success', ('[Notifications] Auto-detected handler: %s'):format(resource))
-            return resource
+    local handler = config.notifications
+    if handlers[handler] and type(handlers[handler]) == 'function' then 
+        return handler 
+    end
+    local priority_list = config.notifications_priority
+    if not priority_list or #priority_list == 0 then return 'default' end
+    for _, resource in ipairs(priority_list) do
+        if GetResourceState(resource) == 'started' then 
+            return resource 
         end
     end
     return 'default'
 end
 
-local NOTIFICATIONS = detect_handler()
-print(('[Notifications] Handler set to: %s'):format(NOTIFICATIONS))
+local NOTIFICATIONS
+NOTIFICATIONS = detect_handler()
+utils.debug_log('info', ('Notification handler set to: %s'):format(NOTIFICATIONS))
 
 --- @section Local Functions
 
 --- Notification bridge function.
 --- @param options table: The notification options (type, message, header, duration).
 local function notify(options)
-    if not options or not options.type or not options.message then
-        utils.debug_log('error', '[Notifications] Invalid notification data provided.')
-        return
-    end
+    if not options or not options.type or not options.message then utils.debug_log('error', 'Invalid notification data provided.') return end
     local handler = handlers[NOTIFICATIONS] or handlers.default
     handler(options)
 end
