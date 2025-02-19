@@ -425,39 +425,36 @@ exports('get_player_job_name', get_player_job_name)
 fw.get_player_job_name = get_player_job_name
 
 --- Modifies a player's server-side statuses.
--- @param _src The player's source identifier.
--- @param statuses The statuses to modify.
+--- @param _src The players source identifier.
+--- @param statuses The statuses to modify.
 local function adjust_statuses(_src, statuses)
     local player = get_player(_src)
-    if not player then print('Player not found') return end
-
-    --- boii_statuses
-    if GetResourceState('boii_statuses') == 'started' then
-        local player_statuses = exports.boii_statuses:get_player(_src)
-        player_statuses.modify_statuses(statuses)
-        return
-    end
-
+    if not player then utils.debug_log('error', 'Player not found.') return end
+    local status_map = { armour = 'armor', armor = 'armour' }
     local esx_max_value = 1000000
     local scale = esx_max_value / 100
     for key, mod in pairs(statuses) do
+        local status_key = status_map[key] or key
         local status_found = false
-        if player.metadata[key] then
-            local current = player.metadata[key]
-            local new_value = math.min(100, math.max(0, current + (mod.add or 0) - (mod.remove or 0)))
-            player.set(key, new_value)
+        local add_value = (mod.add and mod.add.min and mod.add.max) and math.random(mod.add.min, mod.add.max) or 0
+        local remove_value = (mod.remove and mod.remove.min and mod.remove.max) and math.random(mod.remove.min, mod.remove.max) or 0
+        local change_value = add_value - remove_value
+        if player.metadata[status_key] then
+            local current = player.metadata[status_key]
+            local new_value = math.min(100, math.max(0, current + change_value))
+            player.set(status_key, new_value)
             status_found = true
         end
         if not status_found then
             for _, stat in pairs(player.variables.status) do
-                if stat.name == key then
+                if stat.name == status_key then
                     local current = stat.val / scale
-                    local new_value = math.min(100, math.max(0, current + (mod.add or 0) - (mod.remove or 0)))
+                    local new_value = math.min(100, math.max(0, current + change_value))
                     local scaled_value = new_value * scale
                     stat.val = scaled_value
                     player.set('status', player.variables.status)
-                    TriggerClientEvent('esx_status:set', _src, key, scaled_value)
-                    TriggerEvent('esx_status:update', _src, key, scaled_value)
+                    TriggerClientEvent('esx_status:set', _src, status_key, scaled_value)
+                    TriggerEvent('esx_status:update', _src, status_key, scaled_value)
                     TriggerEvent('esx_status:updateClient', _src)
                     status_found = true
                     break
@@ -465,7 +462,7 @@ local function adjust_statuses(_src, statuses)
             end
         end
         if not status_found then
-            print('Status not found for key: ' .. key)
+            print('Status not found for key: ' .. status_key)
         end
     end
 end
