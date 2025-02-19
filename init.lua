@@ -66,6 +66,9 @@ local function get_current_time()
     return IS_SERVER and os.date('%Y-%m-%d %H:%M:%S') or (GetLocalTime and string.format('%04d-%02d-%02d %02d:%02d:%02d', GetLocalTime()) or "0000-00-00 00:00:00")
 end
 
+exports('get_current_time', get_current_time)
+utils.get_current_time = get_current_time
+
 --- Logs debug messages with levels and optional data.
 --- @param level string: The log level ('debug', 'info', 'success', 'warn', 'error').
 --- @param message string: The message to log.
@@ -80,16 +83,8 @@ local function debug_log(level, message, data)
     print(('%s[%s] [%s] [%s]: %s%s'):format(DEBUG_COLOURS[level] or '^7', get_current_time(), resource_name:upper(), level:upper(), DEBUG_COLOURS.reset or '^7', message), data and json.encode(data) or '')
 end
 
--- Export the debug log function
 exports('debug_log', debug_log)
 utils.debug_log = debug_log
-
-RegisterCommand('utils:toggle_debug', function(source, args, rawCommand)
-    if source ~= 0 then print('Command restricted to console.') return end
-    debug_enabled = not debug_enabled
-    SetConvar('debug_enabled', debug_enabled and 'true' or 'false')
-    print('External debugging is now', debug_enabled and 'enabled' or 'disabled')
-end)
 
 --- @section Module Loading
 
@@ -98,7 +93,7 @@ end)
 --- @return table|nil: The loaded module or nil if loading failed.
 local function load_module(module_name)
     if utils.loaded[module_name] and next(utils.loaded[module_name]) then
-        debug_log('info', ('[Load Module] Module already cached and valid: %s'):format(module_name))
+        debug_log('info', ('Module already cached and valid: %s'):format(module_name))
         return utils.loaded[module_name]
     end
     local paths = {
@@ -108,69 +103,41 @@ local function load_module(module_name)
     }
     local module_content
     for _, path in ipairs(paths) do
-        module_content = LoadResourceFile(utils.name, path .. '/shared.lua') or LoadResourceFile(utils.name, path .. ('/%s.lua'):format(utils.context))
+        local shared_path = ('%s/shared.lua'):format(path)
+        local context_path = ('%s/%s.lua'):format(path, utils.context)
+        module_content = LoadResourceFile(utils.name, shared_path) or LoadResourceFile(utils.name, context_path)
         if module_content then break end
     end
-    if not module_content then
-        debug_log('error', ('[Load Module] Module not found: %s'):format(module_name))
-        return nil
-    end
+    if not module_content then debug_log('error', ('Module not found: %s'):format(module_name)) return nil end
     local fn, err = load(module_content, ('@@%s/%s.lua'):format(utils.name, module_name), 't', _G)
-    if not fn then
-        debug_log('error', ('[Load Module] Error loading module (%s): %s'):format(module_name, err))
-        return nil
-    end
-    local result = fn() or {}
-    if type(result) ~= 'table' then
-        debug_log('error', ('[Load Module] Module (%s) did not return a table.'):format(module_name))
-        return nil
-    end
+    if not fn then return debug_log('error', ('Error loading module (%s): %s'):format(module_name, err)) end
+    local result = fn()
+    if type(result) ~= 'table' then return debug_log('error', ('Module (%s) did not return a table.'):format(module_name)) end
     utils.loaded[module_name] = result
-    debug_log('success', ('[Load Module] Loaded module: %s'):format(module_name))
+    debug_log('success', ('Loaded module: %s'):format(module_name))
     return result
 end
 
 --- Load all modules with priority for specific modules (callbacks and commands first).
---- This function handles loading and setting the correct framework bridge to utils.fw.
+--- Handles loading and setting the correct framework bridge to utils.fw.
 local function load_framework_bridge()
-    local active_framework
-    local MODULE_PRIORITY = {
-        'callbacks',
-        'commands'
-    }
-
     -- Load priority modules first
-    for i = 1, #MODULE_PRIORITY do
-        local module_name = MODULE_PRIORITY[i]
-        local result = load_module(module_name)
-        if result then
-            debug_log('success', ('[Module Load] Priority module loaded: %s'):format(module_name))
-        else
-            debug_log('error', ('[Module Load] Failed to load priority module: %s'):format(module_name))
-        end
+    for _, module_name in ipairs({ 'callbacks', 'commands' --[[if for some reason you need more priority modules add here]] }) do
+        if not load_module(module_name) then debug_log('error', ('Failed to load priority module: %s'):format(module_name)) return end
     end
 
-    -- Load remaining framework bridges
-    for i = 1, #FRAMEWORKS do
-        local framework = FRAMEWORKS[i]
-        if GetResourceState(framework) == 'started' then
-            debug_log('info', ('[Framework Bridge] Supported framework detected: %s'):format(framework))
-            local framework_result = load_module(framework, true)
-            if framework_result then
-                utils.loaded.fw = framework_result
-                debug_log('success', ('[Framework Bridge] Loaded bridge functions for: %s'):format(framework))
-                break
-            else
-                debug_log('error', ('[Framework Bridge] Failed to load bridge functions for: %s'):format(framework))
-            end
+    -- Load framework bridge
+    for _, framework in ipairs(FRAMEWORKS) do
+        local state = GetResourceState(framework)
+        if state == 'started' then
+            debug_log('info', ('Supported framework detected: %s'):format(framework))
+            local framework_result = load_module(framework)
+            if not framework_result then debug_log('error', ('Failed to load bridge functions for: %s'):format(framework)) return end
+            utils.loaded.fw = framework_result
         end
     end
-
-    if not utils.loaded.fw then
-        debug_log('info', '[Framework Bridge] No compatible framework found. Running in standalone mode.')
-    end
+    if not utils.loaded.fw then debug_log('info', 'No compatible framework found. Running in standalone mode.') end
 end
-
 
 --- Load a specific data module.
 --- @param name string: The name of the data file (without extension).
@@ -178,32 +145,27 @@ end
 local function load_data(name)
     if utils.data[name] then return utils.data[name] end
     local path = ('data/%s.lua'):format(name)
-
     local content = LoadResourceFile(GetCurrentResourceName(), path)
     if not content then debug_log('error', ('Data file not found: %s'):format(path)) return nil end
-
     local fn, err = load(content, ('@@%s/%s'):format(GetCurrentResourceName(), path), 't', _G)
     if not fn then debug_log('error', ('Error loading data file %s: %s'):format(path, err)) return nil end
-
     utils.data[name] = fn()
     return utils.data[name]
 end
 
---- Load modules on resource start primarily for dev restarts playerJoining should suffice in all accounts.
-AddEventHandler('onResourceStart', function()
+--- Preloads modules and shared data.
+local function preload_modules()
     load_framework_bridge()
-    load_data('reputation')
-    load_data('skills')
-    load_data('licences')
-end)
+    for _, data_file in ipairs({ 'reputation', 'skills', 'licences' }) do
+        load_data(data_file)
+    end
+end
 
---- Load modules on player joining.
-AddEventHandler('playerJoining', function()
-    load_framework_bridge()
-    load_data('reputation')
-    load_data('skills')
-    load_data('licences')
-end)
+--- Load modules & data on resource start primarily for dev restarts playerJoining should suffice in all accounts.
+AddEventHandler('onResourceStart', preload_modules)
+
+--- Load modules & data on player joining.
+AddEventHandler('playerJoining', preload_modules)
 
 --- @section Get Exports
 
