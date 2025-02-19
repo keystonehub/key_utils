@@ -9,10 +9,7 @@ local drawtext = {}
 --- @param source number: The ID of the target player.
 --- @param options table: The drawtext UI options (header, message, icon).
 local function show_drawtext(source, options)
-    if not source or not options or not options.message then
-        print('[Drawtext] Invalid parameters for show_drawtext.')
-        return
-    end
+    if not source or not options or not options.message then utils.debug_log('error', 'Invalid parameters for show_drawtext, check source and options exist.') return end
     TriggerClientEvent('fivem_utils:cl:drawtext_show', source, options)
 end
 
@@ -23,7 +20,7 @@ drawtext.show = show_drawtext
 --- @param source number: The ID of the target player.
 local function hide_drawtext(source)
     if not source then
-        print('[Drawtext] Invalid parameters for hide_drawtext.')
+        utils.debug_log('error', 'Invalid parameters for hide_drawtext, check source exists.')
         return
     end
     TriggerClientEvent('fivem_utils:cl:drawtext_hide', source)
