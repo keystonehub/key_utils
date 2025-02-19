@@ -57,32 +57,25 @@ local handlers = {
 
 --- Detect available handler.
 local function detect_handler()
-    local resource_priority = config.drawtext_priority
     local convar_handler = config.drawtext
-    if handlers[convar_handler] then
-        return convar_handler
-    end
-    for _, resource in ipairs(resource_priority) do
-        if GetResourceState(resource) == 'started' then
-            print(('[Drawtext] Auto-detected handler: %s'):format(resource))
-            return resource
-        end
+    if handlers[convar_handler] and next(handlers[convar_handler]) then return convar_handler end
+    local priority_list = config.drawtext_priority
+    if not priority_list or #priority_list == 0 then return 'default' end
+    for _, resource in ipairs(priority_list) do
+        if GetResourceState(resource) == 'started' then return resource end
     end
     return 'default'
 end
 
 local DRAWTEXT
 DRAWTEXT = detect_handler()
-print(('[Drawtext] DRAWTEXT handler set to: %s'):format(DRAWTEXT))
+utils.debug_log('info', ('DRAWTEXT handler set to: %s'):format(DRAWTEXT))
 
 --- Show drawtext.
 --- @param options table: The drawtext UI options (header, message, icon).
 local function show_drawtext(options)
-    if not options or not options.message then
-        debug_log('error', '[Drawtext] Invalid drawtext options provided.')
-        return
-    end
-    local handler = handlers[DRAWTEXT] or handlers.default
+    if not options or not options.message then debug_log('error', 'Invalid drawtext options provided.') return end
+    local handler = handlersor handlers.default
     handler.show(options)
 end
 
@@ -91,7 +84,7 @@ drawtext.show = show_drawtext
 
 --- Hide drawtext.
 local function hide_drawtext()
-    local handler = handlers[DRAWTEXT] or handlers.default
+    local handler = handlers or handlers.default
     handler.hide()
 end
 
@@ -109,21 +102,5 @@ end)
 RegisterNetEvent('fivem_utils:cl:drawtext_hide', function()
     hide_drawtext()
 end)
-
---- @section Testing
-
---- Testing show drawtext command
-RegisterCommand('ui:test_drawtext_bridge_show', function()
-    show_drawtext({
-        header = 'Test Header',
-        message = 'This is a test message.',
-        icon = 'fa-solid fa-circle-info'
-    })
-end, false)
-
---- Testing hide drawtext command
-RegisterCommand('ui:test_drawtext_bridge_hide', function()
-    hide_drawtext()
-end, false)
 
 return drawtext
