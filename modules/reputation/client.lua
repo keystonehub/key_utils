@@ -1,3 +1,5 @@
+local callbacks = utils.get_module('callbacks')
+
 local reputation = {}
 
 --- @section Local functions
