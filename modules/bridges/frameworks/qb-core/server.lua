@@ -432,27 +432,41 @@ end
 exports('get_player_job_name', get_player_job_name)
 fw.get_player_job_name = get_player_job_name
 
---- Modifies a player's server-side statuses.
--- @param _src The player's source identifier.
--- @param statuses The statuses to modify.
+--- Modifies a players server-side statuses.
+--- @param _src The players source identifier.
+--- @param statuses The statuses to modify.
 local function adjust_statuses(_src, statuses)
     local player = get_player(_src)
-    if not player then print('Player not found') return end
-
-    --- boii_statuses
+    if not player then utils.debug_log('error', 'Player is missing.') return end
+    -- boii_statuses integration
     if GetResourceState('boii_statuses') == 'started' then
         local player_statuses = exports.boii_statuses:get_player(_src)
-        player_statuses.modify_statuses(statuses)
+        if player_statuses then 
+            player_statuses.modify_statuses(statuses)
+        end
         return
     end
-
+    local status_map = { armour = 'armor', armor = 'armour' }
+    local hud_updates = { hunger = nil, thirst = nil, stress = nil }
     for key, mod in pairs(statuses) do
-        if player.PlayerData.metadata[key] then
-            local current = player.PlayerData.metadata[key]
-            local new_value = math.min(100, math.max(0, current + (mod.add or 0) - (mod.remove or 0)))
-            player.PlayerData.metadata[key] = new_value
-            player.Functions.UpdatePlayerData()
+        local status_key = status_map[key] or key
+        if not player.PlayerData.metadata[status_key] then utils.debug_log('warn', ('Bypassing %s does not exist in metadata.'):format(status_key)) return end
+        local add_value = (mod.add and mod.add.min and mod.add.max) and math.random(mod.add.min, mod.add.max) or 0
+        local remove_value = (mod.remove and mod.remove.min and mod.remove.max) and math.random(mod.remove.min, mod.remove.max) or 0
+        local change_value = add_value - remove_value
+        if status_key == 'stress' then
+            if change_value > 0 then
+                TriggerEvent('hud:server:GainStress', change_value, _src)
+            elseif change_value < 0 then
+                TriggerEvent('hud:server:RelieveStress', math.abs(change_value), _src)
+            end
+            hud_updates.stress = true
+        elseif status_key == 'hunger' or status_key == 'thirst' then
+            TriggerClientEvent('hud:client:UpdateNeeds', _src, player.PlayerData.metadata.hunger, player.PlayerData.metadata.thirst)
         end
+        local current = player.PlayerData.metadata[status_key] or 0
+        local new_value = math.min(100, math.max(0, current + change_value))
+        player.Functions.SetMetaData(status_key, new_value)
     end
 end
 
@@ -553,7 +567,7 @@ end
 
 --- Converts qb-core metadata for skills, licences, and job reputation into the data format used by the utils systems.
 --- @lfunction convert_qb_metadata
---- @param _src The player's server ID.
+--- @param _src The players server ID.
 local function convert_qb_metadata(_src)
     local player = fw.get_player(_src)
     local query_part, params = fw.get_id_params(_src)
