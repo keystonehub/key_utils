@@ -58,11 +58,15 @@ local handlers = {
 --- Detect available handler.
 local function detect_handler()
     local convar_handler = config.drawtext
-    if handlers[convar_handler] and next(handlers[convar_handler]) then return convar_handler end
+    if handlers[convar_handler] and type(handlers[convar_handler]) == 'function' then 
+        return convar_handler 
+    end
     local priority_list = config.drawtext_priority
     if not priority_list or #priority_list == 0 then return 'default' end
     for _, resource in ipairs(priority_list) do
-        if GetResourceState(resource) == 'started' then return resource end
+        if GetResourceState(resource) == 'started' then 
+            return resource 
+        end
     end
     return 'default'
 end
@@ -75,7 +79,7 @@ utils.debug_log('info', ('DRAWTEXT handler set to: %s'):format(DRAWTEXT))
 --- @param options table: The drawtext UI options (header, message, icon).
 local function show_drawtext(options)
     if not options or not options.message then debug_log('error', 'Invalid drawtext options provided.') return end
-    local handler = handlersor handlers.default
+    local handler = handlers or handlers.default
     handler.show(options)
 end
 
