@@ -15,9 +15,6 @@ local chat_suggestions = {}
 local function has_permission(_src, required_rank)
     local user = utils.get_user(_src)
     if not user then print('user not found when using command') return false end
-
-    print('user found: ', json.encode(user))
-
     local user_rank = user.rank
     local ranks = type(required_rank) == 'table' and required_rank or { required_rank }
     for _, rank in ipairs(ranks) do
