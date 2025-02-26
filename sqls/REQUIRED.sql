@@ -27,6 +27,8 @@ CREATE TABLE IF NOT EXISTS `utils_bans` (
     `reason` TEXT DEFAULT NULL,
     `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     `expires_at` TIMESTAMP NULL DEFAULT NULL,
-    PRIMARY KEY (`id`),
-    FOREIGN KEY (`unique_id`) REFERENCES `utils_users`(`unique_id`) ON DELETE CASCADE
+    `expired` BOOLEAN NOT NULL DEFAULT FALSE,
+    `appealed` BOOLEAN NOT NULL DEFAULT FALSE,
+    `appealed_by` VARCHAR(255) DEFAULT NULL,
+    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
