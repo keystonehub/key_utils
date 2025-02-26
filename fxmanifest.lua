@@ -7,7 +7,7 @@
 |_|\_\_____| |_| |____/ |_| \___/|_| \_|_____|
 ----------------------------------------------                                               
            Developer Utility Library
-                   V1.0.8             
+                   V1.0.9             
 ----------------------------------------------
 ]]
 
@@ -15,7 +15,7 @@ fx_version 'cerulean'
 games { 'gta5', 'rdr3' }
 
 name 'fivem_utils'
-version '1.0.8'
+version '1.0.9'
 description 'Keystone - Developer Utility Library'
 author 'keystone'
 repository 'https://github.com/keystonehub/fivem_utils'
