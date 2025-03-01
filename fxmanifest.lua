@@ -41,9 +41,11 @@ server_scripts {
     --- oxmysql
     '@oxmysql/lib/MySQL.lua',
     'modules/**/server.lua',
+    'scripts/**/server.lua'
 }
 
 client_scripts {
     'modules/**/client.lua',
+    'scripts/**/client.lua',
     'ui/lua/*'
 }
