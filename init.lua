@@ -119,7 +119,6 @@ local function load_module(module_name)
 end
 
 --- Load all modules with priority for specific modules (callbacks and commands first).
---- Handles loading and setting the correct framework bridge to utils.fw.
 local function load_framework_bridge()
     -- Load priority modules first
     for _, module_name in ipairs({ 'callbacks', 'commands' --[[if for some reason you need more priority modules add here]] }) do
