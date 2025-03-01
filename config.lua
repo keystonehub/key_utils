@@ -16,12 +16,12 @@ config.unique_id_digits = 6
 --- Default: 'standalone' - This allows the library to run entirely standalone however you will lose access to the framework bridge, skills, licences and rep.
 --- Supported Frameworks: 'es_extended', 'ox_core', 'qb-core', 'ND_Core', 'keystone' *(soon to release)*.
 --- For details on adding custom support read FRAMEWORK_BRIDGES.MD.
-config.framework = 'qb-core'
+config.framework = 'none'
 
 --- Enable/disable QBCore metadata conversions.
 --- If true will get player metadata values and check for any match with utils skills and licences to ensure both sets are synced.
 --- If not using qb-core just ignore this the module will bypass.
-config.qb_metadata_conversions = true
+config.qb_metadata_conversions = false
 
 --- UI Bridges
 
