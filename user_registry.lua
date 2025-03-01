@@ -4,8 +4,8 @@
 local deferals_updates_enabled = GetConvar('utils:deferals_updates', 'true') == 'true'
 
 --- Unique IDs
-local unique_id_prefix = GetConvar('utils:unique_id_prefix', 'DEFAULT_')
-local unique_id_digits = tonumber(GetConvar('utils:unique_id_digits', '5'))
+local unique_id_prefix = config.unique_id_prefix
+local unique_id_digits = tonumber(config.unique_id_digits)
 
 --- @section Constants
 
