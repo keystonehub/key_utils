@@ -44,7 +44,7 @@ local function filter_menu(options)
         if processed_option.submenu then
             processed_option.submenu = filter_menu(processed_option.submenu)
         end
-        processed_options[#processed_options + 1] = processed_option --- line 47
+        processed_options[#processed_options + 1] = processed_option
     end
     return processed_options
 end
@@ -77,8 +77,8 @@ end)
 RegisterNUICallback('action_menu_trigger_event', function(data)
     local action_handlers = {
         ['function'] = function(action) action(data.action) end,
-        ['client_event'] = function(action) TriggerEvent(action, data.params) end,
-        ['server_event'] = function(action) TriggerServerEvent(action, data.params) end
+        ['client'] = function(action) TriggerEvent(action, data.params) end,
+        ['server'] = function(action) TriggerServerEvent(action, data.params) end
     }
     local handler = action_handlers[data.action_type]
     if not handler then
@@ -110,7 +110,7 @@ local test_menu = {
                         label = 'Action 1',
                         icon = 'fa-solid fa-cog',
                         colour = '#4dcbc2',
-                        action_type = 'client_event',
+                        action_type = 'client',
                         action = 'some_event',
                         params = {}
                     },
@@ -118,7 +118,7 @@ local test_menu = {
                         label = 'Action 2',
                         icon = 'fa-solid fa-cog',
                         colour = '#4dcbc2',
-                        action_type = 'client_event',
+                        action_type = 'client',
                         action = 'another_event',
                         params = {}
                     }
@@ -129,7 +129,7 @@ local test_menu = {
     {
         label = 'Quick Action',
         icon = 'fa-solid fa-bolt',
-        action_type = 'client_event',
+        action_type = 'client',
         action = 'utils:action_menu_test_event',
         params = {}
     }
