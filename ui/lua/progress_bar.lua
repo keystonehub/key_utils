@@ -29,13 +29,3 @@ RegisterNUICallback('progressbar_end', function(data)
         print('Progress failed or was cancelled')
     end
 end)
-
---- @section Testing
-
-RegisterCommand('ui:test_progress', function(source, args, rawCommand)
-    show_progressbar({
-        header = 'Test Progress',
-        icon = 'fa-solid fa-spinner',
-        duration = 5000
-    })
-end, false)
