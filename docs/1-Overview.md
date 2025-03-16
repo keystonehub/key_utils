@@ -70,8 +70,8 @@ Much love, and happy scripting!
 
 # UI Previews
 
-[Action Menu, Context Menu, Dialogue, DrawText, Notifications](https://i.ibb.co/PG7vKfPB/image-2025-03-15-004251413.png)
-[Progress Bar, Progress Circle](https://i.ibb.co/9HkYnYqh/image-2025-03-15-004440049.png)
+![Action Menu, Context Menu, Dialogue, DrawText, Notifications](https://i.ibb.co/PG7vKfPB/image-2025-03-15-004251413.png)
+![Progress Bar, Progress Circle](https://i.ibb.co/9HkYnYqh/image-2025-03-15-004440049.png)
 
 # Dependencies
 
