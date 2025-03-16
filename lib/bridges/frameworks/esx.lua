@@ -435,7 +435,7 @@ if ENV.IS_SERVER then
     local function register_item(item, cb)
         if not item then return false end
 
-        core.RegisterUsableItem(item, function(source)
+        ESX.RegisterUsableItem(item, function(source)
             cb(source)
         end)
     end
