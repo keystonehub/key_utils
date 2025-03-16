@@ -47,19 +47,3 @@ end)
 RegisterNUICallback('hide_drawtext', function()
     hide_drawtext()
 end)
-
---- Register commands for testing
-
-RegisterCommand('ui:show_drawtext', function()
-    show_drawtext({
-        header = 'Enter Building',
-        message = 'Press the indicated key to enter',
-        keypress = 'e',
-        icon = 'fa-solid fa-gear',
-        bar_colour = '#4dcbc2'
-    })
-end, false)
-
-RegisterCommand('ui:hide_drawtext', function()
-    hide_drawtext()
-end, false)
