@@ -4,7 +4,7 @@ local DRAWTEXT = require("modules.drawtext")
 
 --- @section Events
 
-if not IS_SERVER then
+if not ENV.IS_SERVER then
 
     --- Show drawtext.
     --- @param options table: Options for drawtext ui.
