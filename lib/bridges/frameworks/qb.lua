@@ -395,7 +395,7 @@ if ENV.IS_SERVER then
     local function register_item(item, cb)
         if not item then return false end
         
-        core.Functions.CreateUseableItem(item, function(source)
+        QBCore.Functions.CreateUseableItem(item, function(source)
             cb(source)
         end)
     end
