@@ -23,13 +23,6 @@ RegisterNetEvent('key_utils:cl:notify', function(options)
     notify(options)
 end)
 
---- @section Events
-
---- Bridge event was moved here to prevent doubling when getting notify bridge module.
-RegisterNetEvent('key_utils:cl:send_notification', function(options)
-    exports.key_utils:send_notification(options)
-end)
-
 --- @section Testing
 
 RegisterCommand('ui:test_notify_bridge', function()
