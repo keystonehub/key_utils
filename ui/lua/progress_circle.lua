@@ -2,7 +2,7 @@
 
 --- Show progress circle with options
 --- @param options table: Contains message and duration for the progress circle.
-local function show_circle(options)
+function show_circle(options)
     SetNuiFocus(true, false)
     SendNUIMessage({
         action = 'show_circle',
@@ -17,13 +17,4 @@ exports('show_circle', show_circle)
 
 RegisterNUICallback('circle_end', function()
     SetNuiFocus(false, false)
-end)
-
---- @section Testing
-
-RegisterCommand('ui:test_circle', function()
-    show_circle({
-        message = 'Testing circle..',
-        duration = 10
-    })
 end)
