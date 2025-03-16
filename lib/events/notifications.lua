@@ -4,7 +4,7 @@ local NOTIFICATIONS = require("modules.notifications")
 
 --- @section Events
 
-if not IS_SERVER then
+if not ENV.IS_SERVER then
 
     --- Send notifications.
     --- @param options table: Options for notification.
