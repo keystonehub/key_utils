@@ -395,7 +395,7 @@ if ENV.IS_SERVER then
     --- @param cb function: The callback function to execute when the item is used.
     local function register_item(item, cb)
         if not item then DEBUG.print("warn", "Function: register_item | Note: Item identifier is missing") return end
-        core.Functions.CreateUseableItem(item, function(source)
+        QBCore.Functions.CreateUseableItem(item, function(source)
             cb(source)
         end)
     end
