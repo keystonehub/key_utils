@@ -1,6 +1,6 @@
 --- @section Modules
 
-local REQUESTS = require("modules.requests")
+local REQUESTS <const> = require("modules.requests")
 
 --- @module Player
 
@@ -152,7 +152,7 @@ if not ENV.IS_SERVER then
             print('Options or animation dictionary/animation name is missing') 
             return 
         end
-        requests_module.anim(options.dict)
+        REQUESTS.anim(options.dict)
         if options.freeze then
             FreezeEntityPosition(player_ped, true)
         end
@@ -179,7 +179,7 @@ if not ENV.IS_SERVER then
         end
         if options.props then
             for _, prop in ipairs(options.props) do
-                requests_module.model(prop.model)
+                REQUESTS.model(prop.model)
                 local prop_entity = CreateObject(GetHashKey(prop.model), GetEntityCoords(player_ped), true, true, true)
                 AttachEntityToEntity(prop_entity, player_ped, GetPedBoneIndex(player_ped, prop.bone), prop.coords.x or 0.0, prop.coords.y or 0.0, prop.coords.z or 0.0, prop.rotation.x or 0.0, prop.rotation.y or 0.0, prop.rotation.z or 0.0, true, prop.use_soft or false, prop.collision or false, prop.is_ped or true, prop.rot_order or 1, prop.sync_rot or true)
                 table.insert(props, prop_entity)
