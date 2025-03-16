@@ -2,7 +2,7 @@
 
 --- Show progress bar with options
 --- @param options table: Contains header, icon, and duration of the progress bar.
-local function show_progressbar(options)
+function show_progressbar(options)
     SetNuiFocus(false, false)
     SendNUIMessage({
         action = 'show_progressbar',
@@ -15,7 +15,7 @@ end
 exports('show_progressbar', progressbar)
 
 --- Hide progress bar
-local function hide_progressbar()
+function hide_progressbar()
     SendNUIMessage({ action = 'hide_progressbar' })
 end
 
