@@ -2,6 +2,8 @@
 
 local STRINGS <const> = require("modules.strings")
 local MATHS <const> = require("modules.maths")
+local ENTITIES <const> = require("modules.entities")
+local REQUESTS <const> = require("modules.requests")
 
 --- @section Module
 
@@ -328,7 +330,7 @@ if not ENV.IS_SERVER then
         if use_current_vehicle and IsPedInAnyVehicle(player, false) then
             vehicle = GetVehiclePedIsIn(player, false)
         else
-            vehicle, vehicle_data.distance = utils.entities.get_closest_vehicle(player_coords, 10.0, false)
+            vehicle, vehicle_data.distance = ENTITIES.get_closest_vehicle(player_coords, 10.0, false)
             vehicle_data.distance = #(player_coords - GetEntityCoords(vehicle))
         end
         if not vehicle then
@@ -429,7 +431,7 @@ if not ENV.IS_SERVER then
         local is_network = vehicle_data.is_network
         local net_mission_entity = vehicle_data.net_mission_entity
         local hash = GetHashKey(model)
-        utils.requests.model(hash)
+        REQUESTS.model(hash)
         local vehicle = CreateVehicle(hash, coords.x, coords.y, coords.z, coords.w, is_network, net_mission_entity)
         if vehicle_data.custom_plate then
             SetVehicleNumberPlateText(vehicle, vehicle_data.custom_plate)
