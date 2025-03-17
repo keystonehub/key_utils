@@ -7,7 +7,7 @@
 |_|\_\_____| |_| |____/ |_| \___/|_| \_|_____|
 ----------------------------------------------                                               
                Utility Library
-                   V1.1.0              
+                   V1.1.1              
 ----------------------------------------------
 ]]
 
@@ -15,7 +15,7 @@ fx_version "cerulean"
 games { "gta5", "rdr3" }
 
 name "keystone"
-version "1.1.0"
+version "1.1.1"
 description "Keystone - Utility Library with Common UI and Bridges"
 author "Case"
 repository "https://github.com/keystonehub/key_utils"
