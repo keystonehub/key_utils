@@ -1,3 +1,8 @@
+--- @section Modules
+
+local STRINGS <const> = require("modules.strings")
+local MATHS <const> = require("modules.maths")
+
 --- @section Module
 
 local vehicles = {}
@@ -9,7 +14,7 @@ if not ENV.IS_SERVER then
     local function get_vehicle_plate(vehicle)
         if vehicle == 0 then return end
 
-        return utils.strings.trim(GetVehicleNumberPlateText(vehicle))
+        return STRINGS.trim(GetVehicleNumberPlateText(vehicle))
     end
 
     --- Retrieves the model name of a vehicle.
@@ -133,11 +138,11 @@ if not ENV.IS_SERVER then
             tyres_can_burst = GetVehicleTyresCanBurst(vehicle),
             plate = boii.trim_string(GetVehicleNumberPlateText(vehicle)),
             plate_index = GetVehicleNumberPlateTextIndex(vehicle),
-            body_health = utils.maths.round_number(GetVehicleBodyHealth(vehicle), 1),
-            engine_health = utils.maths.round_number(GetVehicleEngineHealth(vehicle), 1),
-            tank_health = utils.maths.round_number(GetVehiclePetrolTankHealth(vehicle), 1),
-            fuel_level = utils.maths.round_number(GetVehicleFuelLevel(vehicle), 1),
-            dirt_level = utils.maths.round_number(GetVehicleDirtLevel(vehicle), 1),
+            body_health = MATHS.round_number(GetVehicleBodyHealth(vehicle), 1),
+            engine_health = MATHS.round_number(GetVehicleEngineHealth(vehicle), 1),
+            tank_health = MATHS.round_number(GetVehiclePetrolTankHealth(vehicle), 1),
+            fuel_level = MATHS.round_number(GetVehicleFuelLevel(vehicle), 1),
+            dirt_level = MATHS.round_number(GetVehicleDirtLevel(vehicle), 1),
             color1 = color_primary,
             color2 = color_secondary,
             custom_primary_color = custom_primary_color,
