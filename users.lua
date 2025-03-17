@@ -114,19 +114,16 @@ local function update_deferral(deferrals, message, delay)
     if delay then Wait(delay) end
 end
 
---- @section Exports
-
 --- Retrieves all connected users.
 --- @return table: A list of all connected users.
-local function get_users()
+function get_users()
     return connected_users
 end
-
 
 --- Retrieve user data by source ID.
 --- @param source number: The players source identifier.
 --- @return table|nil: The user data if found, or nil if not.
-local function get_user(source)
+function get_user(source)
     return connected_users[source] or nil
 end
 
