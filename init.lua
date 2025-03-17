@@ -179,6 +179,9 @@ function cfx_require(name)
     return result
 end
 
+--- Export for safe require.
+exports("require", cfx_require)
+
 --- Override global require for CFX.
 _G.require = cfx_require
 
