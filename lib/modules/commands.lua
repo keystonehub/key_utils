@@ -12,7 +12,7 @@ if ENV.IS_SERVER then
     --- @param required_rank string|table: The required rank or ranks.
     --- @return boolean: True if the user has the required permission, false otherwise.
     local function has_permission(source, required_rank)
-        local user = utils.get_user(source)
+        local user = get_user(source)
         if not user then print("user not found when using command") return false end
 
         local user_rank = user.rank
